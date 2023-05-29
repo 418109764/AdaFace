@@ -93,11 +93,6 @@ class AdaFace(Module):
         margin_scaler = (safe_norms - self.batch_mean) / (self.batch_std+self.eps) # 66% between -1, 1
         margin_scaler = margin_scaler * self.h # 68% between -0.333 ,0.333 when h:0.333
         margin_scaler = torch.clip(margin_scaler, -1, 1)
-        # ex: m=0.5, h:0.333
-        # range
-        #       (66% range)
-        #   -1 -0.333  0.333   1  (margin_scaler)
-        # -0.5 -0.166  0.166 0.5  (m * margin_scaler)
 
         # g_angular
         m_arc = torch.zeros(label.size()[0], cosine.size()[1], device=cosine.device)
