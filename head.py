@@ -78,9 +78,9 @@ class AdaFace(Module):
 
         kernel_norm = l2_norm(self.kernel,axis=0)
         cosine = torch.mm(embbedings,kernel_norm)
-        cosine = cosine.clamp(-1+self.eps, 1-self.eps) # for stability
+        cosine = cosine.clamp(-1+self.eps, 1-self.eps)
 
-        safe_norms = torch.clip(norms, min=0.001, max=100) # for stability
+        safe_norms = torch.clip(norms, min=0.001, max=100)
         safe_norms = safe_norms.clone().detach()
 
         # update batchmean batchstd
@@ -90,8 +90,8 @@ class AdaFace(Module):
             self.batch_mean = mean * self.t_alpha + (1 - self.t_alpha) * self.batch_mean
             self.batch_std =  std * self.t_alpha + (1 - self.t_alpha) * self.batch_std
 
-        margin_scaler = (safe_norms - self.batch_mean) / (self.batch_std+self.eps) # 66% between -1, 1
-        margin_scaler = margin_scaler * self.h # 68% between -0.333 ,0.333 when h:0.333
+        margin_scaler = (safe_norms - self.batch_mean) / (self.batch_std+self.eps)
+        margin_scaler = margin_scaler * self.h
         margin_scaler = torch.clip(margin_scaler, -1, 1)
 
         # g_angular
